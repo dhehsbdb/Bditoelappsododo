@@ -144,15 +144,13 @@
     generateHeartsContinuously();
 
     const audio = document.getElementById('popupSound');
-    const tapArea = document.getElementById("tapToStart");
+    const tapArea = document.getElementById('tapToStart');
 
-    // User must tap visible element
-    tapArea.addEventListener("touchstart", () => {
+    // Play on every tap
+    tapArea.addEventListener('touchstart', () => {
       audio.currentTime = 0;
-      audio.play().then(() => {
-        tapArea.style.display = "none"; // Remove layer after success
-      });
-    }, { once: true });
+      audio.play();
+    });
 
   }, 1000);
 };

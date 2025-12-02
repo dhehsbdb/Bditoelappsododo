@@ -108,6 +108,13 @@
 </head>
 <body>
 
+  <div id="tapToStart" style="
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0);
+  z-index:2000;
+"></div>
+
 <div class="popup-bg" id="popup">
   <!-- Heart-shaped popup using SVG -->
   <svg width="400" height="400" viewBox="0 0 32 29.6" class="popup-heart">
@@ -131,21 +138,21 @@
 
 <script>
   
-   window.onload = () => {
+  window.onload = () => {
   setTimeout(() => {
     document.getElementById('popup').classList.add('show');
     generateHeartsContinuously();
 
     const audio = document.getElementById('popupSound');
+    const tapArea = document.getElementById("tapToStart");
 
-    // Try autoplay (may fail on iPhone)
-    audio.play().catch(() => {});
-
-    // Play again every time user clicks anywhere
-    document.body.addEventListener('touchstart', () => {
-      audio.currentTime = 0; // restart from beginning
-      audio.play();
-    });
+    // User must tap visible element
+    tapArea.addEventListener("touchstart", () => {
+      audio.currentTime = 0;
+      audio.play().then(() => {
+        tapArea.style.display = "none"; // Remove layer after success
+      });
+    }, { once: true });
 
   }, 1000);
 };

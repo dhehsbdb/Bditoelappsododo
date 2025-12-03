@@ -100,27 +100,19 @@
     75% { transform: scale(1.1); }
   }
 
-  /* Play Music Button */
-  #playMusicBtn {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 12px 24px;
-    font-size: 18px;
-    background: #ff758c;
-    color: white;
-    border: none;
-    border-radius: 25px;
+  /* Invisible tap overlay */
+  #tapOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1001;
     cursor: pointer;
-    z-index: 2000;
   }
 </style>
 </head>
 <body>
-
-<!-- Play Music Button -->
-<button id="playMusicBtn">Play Music</button>
 
 <div class="popup-bg" id="popup">
   <!-- Heart-shaped popup using SVG -->
@@ -141,6 +133,9 @@
   </svg>
 
   <div class="hearts" id="hearts"></div>
+
+  <!-- Invisible overlay to capture first tap -->
+  <div id="tapOverlay"></div>
 </div>
 
 <!-- Audio -->
@@ -149,19 +144,21 @@
 <script>
 window.onload = () => {
   setTimeout(() => {
-    document.getElementById('popup').classList.add('show');
+    const popup = document.getElementById('popup');
+    popup.classList.add('show');
     generateHeartsContinuously();
+
+    const audio = document.getElementById('popupSound');
+    const overlay = document.getElementById('tapOverlay');
+
+    // Play audio on first tap on overlay
+    overlay.addEventListener('touchstart', () => {
+      audio.pause();
+      audio.currentTime = 0;
+      audio.play().catch(()=>{});
+    });
+
   }, 1000);
-
-  // Play Music Button
-  const playBtn = document.getElementById('playMusicBtn');
-  const audio = document.getElementById('popupSound');
-
-  playBtn.addEventListener('click', () => {
-    audio.pause();
-    audio.currentTime = 0;
-    audio.play().catch(()=>{});
-  });
 };
 
 function closePopup() {
